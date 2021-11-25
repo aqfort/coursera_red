@@ -1,12 +1,8 @@
-#include "test_runner_portable.h"
+#include "test_runner.h"
 
 
 using namespace std;
 
-
-inline void Assert(bool b, const string &hint) {
-    AssertEqual(b, true, hint);
-}
 
 TestRunner::TestRunner() {
     fail_count = 0;
@@ -22,7 +18,7 @@ TestRunner::~TestRunner() {
 void TestAll() {
     TestRunner runner;
 
-    RUN_TEST(runner, Test1);
+    RUN_TEST(runner, Test);
 }
 
-void Test1() {}
+void Test() {}

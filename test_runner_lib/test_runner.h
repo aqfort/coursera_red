@@ -47,7 +47,9 @@ ostream &operator<<(ostream &out, const set<T> &s);
 template<class T, class U>
 void AssertEqual(const T &t, const U &u, const string &hint);
 
-inline void Assert(bool b, const string &hint);
+inline void Assert(bool b, const string &hint) {
+    AssertEqual(b, true, hint);
+}
 
 class TestRunner {
 public:
@@ -65,19 +67,7 @@ private:
 
 void TestAll();
 
-void Test1();
-
-void Test2();
-
-void Test3();
-
-void Test4();
-
-void Test5();
-
-void Test6();
-
-void Test7();
+void Test();
 
 
 template<typename Collection>
