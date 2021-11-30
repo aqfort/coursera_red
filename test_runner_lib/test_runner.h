@@ -25,9 +25,7 @@
   tr.RunTest(func, #func);              \
 }
 
-
 using namespace std;
-
 
 template<typename Collection>
 string Join(const Collection &c, char d);
@@ -64,11 +62,9 @@ private:
     int fail_count = 0;
 };
 
-
-void TestAll();
-
-void Test();
-
+//void TestAll();
+//
+//void Test();
 
 template<typename Collection>
 string Join(const Collection &c, const string &d) {

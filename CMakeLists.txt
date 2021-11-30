@@ -6,7 +6,9 @@ set(CMAKE_CXX_STANDARD 23)
 
 
 
-set(SOURCE week_1/max_element_if.cpp)
+#set(SOURCE week_1/max_element_if.cpp)
+
+set(SOURCE week_1/log.cpp)
 
 
 

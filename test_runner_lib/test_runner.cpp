@@ -1,8 +1,6 @@
 #include "test_runner.h"
 
-
 using namespace std;
-
 
 TestRunner::TestRunner() {
     fail_count = 0;
@@ -15,10 +13,10 @@ TestRunner::~TestRunner() {
     }
 }
 
-void TestAll() {
-    TestRunner runner;
-
-    RUN_TEST(runner, Test);
-}
-
-void Test() {}
+//void Test() {}
+//
+//void TestAll() {
+//    TestRunner runner;
+//
+//    RUN_TEST(runner, Test);
+//}
