@@ -48,9 +48,9 @@ void Logger::SetFile(const string &new_file) {
 }
 
 #define LOG(logger, message) {      \
-  (logger).SetLine(__LINE__);       \
-  (logger).SetFile(__FILE__);       \
-  (logger).Log(message);            \
+    (logger).SetLine(__LINE__);     \
+    (logger).SetFile(__FILE__);     \
+    (logger).Log(message);          \
 }
 
 void TestLog() {
