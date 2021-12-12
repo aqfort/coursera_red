@@ -8,17 +8,17 @@
 #include <string>
 
 #define ASSERT_EQUAL(x, y) {            \
-  ostringstream os;                     \
-  os << #x << " != " << #y << ", "      \
+  ostringstream ASS_OS;                 \
+  ASS_OS << #x << " != " << #y << endl  \
     << __FILE__ << ":" << __LINE__;     \
-  AssertEqual(x, y, os.str());          \
+  AssertEqual(x, y, ASS_OS.str());      \
 }
 
 #define ASSERT(x) {                     \
-  ostringstream os;                     \
-  os << #x << " is false, "             \
+  ostringstream ASS_OS;                 \
+  ASS_OS << #x << " is false" << endl   \
     << __FILE__ << ":" << __LINE__;     \
-  Assert(x, os.str());                  \
+  Assert(x, ASS_OS.str());              \
 }
 
 #define RUN_TEST(tr, func) {            \
@@ -28,7 +28,7 @@
 using namespace std;
 
 template<typename Collection>
-string Join(const Collection &c, char d);
+[[maybe_unused]] string Join(const Collection &c, char d);
 
 template<typename First, typename Second>
 ostream &operator<<(ostream &out, const pair<First, Second> &p);
@@ -49,7 +49,7 @@ inline void Assert(bool b, const string &hint) {
     AssertEqual(b, true, hint);
 }
 
-class TestRunner {
+class [[maybe_unused]] TestRunner {
 public:
     TestRunner();
 
@@ -61,10 +61,6 @@ public:
 private:
     int fail_count = 0;
 };
-
-//void TestAll();
-//
-//void Test();
 
 template<typename Collection>
 string Join(const Collection &c, const string &d) {
@@ -104,9 +100,8 @@ template<class T, class U>
 void AssertEqual(const T &t, const U &u, const string &hint) {
     if (t != u) {
         ostringstream os;
-        os << "assertion failed: " << t << " != " << u;
         if (!hint.empty()) {
-            os << " --- hint: " << hint;
+            os << hint;
         }
         throw runtime_error(os.str());
     }
