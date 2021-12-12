@@ -13,7 +13,11 @@ TestRunner::~TestRunner() {
     }
 }
 
-//void Test() {}
+//void Test() {
+//    ASSERT(true);
+//
+//    ASSERT_EQUAL(1, 1);
+//}
 //
 //void TestAll() {
 //    TestRunner runner;
