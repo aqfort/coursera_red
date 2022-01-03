@@ -7,22 +7,22 @@
 #include <set>
 #include <string>
 
-#define ASSERT_EQUAL(x, y) {            \
-  ostringstream ASS_OS;                 \
-  ASS_OS << #x << " != " << #y << endl  \
-    << __FILE__ << ":" << __LINE__;     \
-  AssertEqual(x, y, ASS_OS.str());      \
+#define ASSERT_EQUAL(x, y) {                \
+    ostringstream ASS_OS;                   \
+    ASS_OS << #x << " != " << #y << endl    \
+        << __FILE__ << ":" << __LINE__;     \
+    AssertEqual(x, y, ASS_OS.str());        \
 }
 
-#define ASSERT(x) {                     \
-  ostringstream ASS_OS;                 \
-  ASS_OS << #x << " is false" << endl   \
-    << __FILE__ << ":" << __LINE__;     \
-  Assert(x, ASS_OS.str());              \
+#define ASSERT(x) {                         \
+    ostringstream ASS_OS;                   \
+    ASS_OS << #x << " is false" << endl     \
+        << __FILE__ << ":" << __LINE__;     \
+    Assert(x, ASS_OS.str());                \
 }
 
-#define RUN_TEST(tr, func) {            \
-  tr.RunTest(func, #func);              \
+#define RUN_TEST(tr, func) {                \
+    tr.RunTest(func, #func);                \
 }
 
 using namespace std;
