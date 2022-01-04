@@ -9,36 +9,55 @@
 using namespace std;
 
 class ReadingManager {
-private:
-    static const int MAX_ID = 100'000;
-    static const int MAX_PAGE = 1'000;
-
-    vector<int> _id;
-    vector<int> _page;
-
 public:
-    ReadingManager() :
-            _id(MAX_ID + 1, -1),
-            _page(MAX_PAGE + 1, 0) {}
+    ReadingManager()
+    // -1 значит, что не случилось ни одного READ
+            : user_page_counts_(MAX_USER_COUNT_ + 1, -1),
+              page_achieved_by_count_(MAX_PAGE_COUNT_ + 1, 0) {}
 
-    void Read(const int & id, const int& page) {
-        for (int i = _id[id] + 1; i <= page; i++) {
-            _page[i]++;
-        }
-
-        _id[id] = page;
+    void Read(int user_id, int page_count) {
+        UpdatePageRange(user_page_counts_[user_id] + 1, page_count + 1);
+        user_page_counts_[user_id] = page_count;
     }
 
-    [[nodiscard]] double Cheer(const int& id) const {
-        if (_id[id] == -1) {
-            return 0.0;
+    [[nodiscard]] double Cheer(int user_id) const {
+        const int pages_count = user_page_counts_[user_id];
+        if (pages_count == -1) {
+            return 0;
         }
-
-        if (_page[0] == 1) {
-            return 1.0;
+        const int user_count = GetUserCount();
+        if (user_count == 1) {
+            return 1;
         }
+        // По умолчанию деление целочисленное, поэтому
+        // нужно привести числитель к типу double.
+        // Простой способ сделать это — умножить его на 1.0.
+        return (user_count - page_achieved_by_count_[pages_count]) * 1.0
+               / (user_count - 1);
+    }
 
-        return static_cast<double>(_page[0] - _page[_id[id]]) / static_cast<double>(_page[0] - 1);
+private:
+    // Статическое поле не принадлежит какому-либо конкретному объекту класса.
+    // По сути это глобальная переменная, в данном случае - константная.
+    // Будь она публичной, к ней можно было бы обратиться снаружи
+    // следующим образом: ReadingManager::MAX_USER_COUNT.
+    static const int MAX_USER_COUNT_ = 100'000;
+    static const int MAX_PAGE_COUNT_ = 1'000;
+
+    // Номер страницы, до которой дочитал пользователь <ключ>
+    vector<int> user_page_counts_;
+    // Количество пользователей, дочитавших (как минимум) до страницы <индекс>
+    vector<int> page_achieved_by_count_;
+
+    [[nodiscard]] int GetUserCount() const {
+        return page_achieved_by_count_[0];
+    }
+
+    // lhs включительно, rhs не включительно
+    void UpdatePageRange(int lhs, int rhs) {
+        for (int i = lhs; i < rhs; ++i) {
+            ++page_achieved_by_count_[i];
+        }
     }
 };
 
