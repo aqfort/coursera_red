@@ -2,12 +2,56 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <set>
+#include <tuple>
+#include <map>
 
 using namespace std;
 
 class ReadingManager {
+private:
+    struct Person {
+        int _id;
+        int _page;
+
+        explicit Person(const int &id, const int &page) : _id(id), _page(page) {}
+
+        bool operator<(const Person &rhs) const {
+            return tie(_page, _id) < tie(rhs._page, rhs._id);
+        }
+    };
+
+    set<Person> _rating;
+    map<int, int> _id_page;
+
 public:
-    ReadingManager()
+    void Read(const int &id, const int &page) {
+        if (_id_page.count(id) > 0) {
+            _rating.erase(Person(id, _id_page[id]));
+        }
+
+        _rating.emplace(Person(id, page));
+        _id_page[id] = page;
+    }
+
+    double Cheer(const int &id) {
+        if (_id_page.count(id) == 0) {
+            return 0.0;
+        }
+
+        if (_id_page.size() == 1) {
+            return 1.0;
+        }
+
+        auto it = _rating.lower_bound(Person(0, _id_page[id])); // numeric_limits<int>::min() -- instead of id(0)
+
+        return static_cast<double>(distance(_rating.begin(), it)) / static_cast<double>(_id_page.size() - 1);
+    }
+};
+
+class ReadingManagerSlow {
+public:
+    ReadingManagerSlow()
             : user_page_counts_(MAX_USER_COUNT_ + 1, 0),
               sorted_users_(),
               user_positions_(MAX_USER_COUNT_ + 1, -1) {}
@@ -75,7 +119,6 @@ private:
     }
 };
 
-
 int main() {
     // Для ускорения чтения данных отключается синхронизация
     // cin и cout с stdio,
@@ -102,12 +145,6 @@ int main() {
             cout << setprecision(6) << manager.Cheer(user_id) << "\n";
         }
     }
-
-//    cout << 100000 << endl;
-//    cout << UINT32_MAX << endl;
-//    cout << endl;
-//    cout << 1000 << endl;
-//    cout << UINT16_MAX << endl;
 
     return 0;
 }
