@@ -18,7 +18,8 @@ set(CMAKE_CXX_STANDARD 23)
 #set(SOURCE week_2/sort_students.cpp)
 #set(SOURCE week_2/learner.cpp)
 #set(SOURCE week_2/expresses.cpp)
-set(SOURCE week_2/ebook.cpp)
+#set(SOURCE week_2/ebook.cpp)
+set(SOURCE week_2/booking.cpp)
 
 
 
