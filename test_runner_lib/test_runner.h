@@ -101,7 +101,7 @@ void AssertEqual(const T &t, const U &u, const string &hint) {
     if (t != u) {
         ostringstream os;
         if (!hint.empty()) {
-            os << hint;
+            os << "Assertion failed: " << t << " != " << u << " -> Hint: " << hint;
         }
         throw runtime_error(os.str());
     }
@@ -111,10 +111,10 @@ template<class TestFunction>
 void TestRunner::RunTest(TestFunction test, const string &test_name) {
     try {
         test();
-        cerr << test_name << " OK" << endl;
+        cerr << test_name << " - OK" << endl;
     } catch (exception &e) {
         ++fail_count;
-        cerr << test_name << " fail: " << e.what() << endl;
+        cerr << test_name << " - FAIL -> " << e.what() << endl;
     } catch (...) {
         ++fail_count;
         cerr << "Unknown exception caught" << endl;
