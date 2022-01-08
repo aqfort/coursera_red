@@ -1,6 +1,7 @@
 #include <iostream>
-#include <cstdint>
+#include <map>
 #include <deque>
+
 #include "test_runner.h"
 #include "profile.h"
 
@@ -8,12 +9,10 @@ using namespace std;
 
 class BookingManager {
 public:
-    BookingManager() {
-
-    }
+    BookingManager() = default;
 
     void book(const int64_t &time, const string &hotel_name, const int &client_id, const int &room_count) {
-
+        Event event = Event(time, client_id, room_count);
     }
 
     int clients(const string &hotel_name) {
@@ -25,10 +24,51 @@ public:
     }
 
 private:
-    deque<int> data;
+    struct Event {
+        explicit Event(const int64_t &time, const int &client_id, const int &room_count) :
+                time_(time), client_id_(client_id), room_count_(room_count) {}
+
+        const int64_t time_ = 0;
+        const int client_id_ = 0;
+        const int room_count_ = 0;
+    };
+
+    class Hotel {
+    public:
+        Hotel() = default;
+
+        void book(const int64_t &time, const int &client_id, const int &room_count) {
+
+        }
+
+        int clients() {
+
+        }
+
+    private:
+        static int64_t current_time_;
+        static const int64_t day_ = 86400;
+
+        int room_count_sum_ = 0;
+        map<int, int> clients_{};
+        deque<Event> events_{};
+    };
+
+    map<string, Hotel> hotels_{};
 };
 
-int bookingMachine() {
+void test();
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    {
+        LOG_DURATION("TESTS")
+        TestRunner runner;
+        RUN_TEST(runner, test);
+    }
+
     BookingManager manager;
 
     int query_count;
@@ -43,36 +83,20 @@ int bookingMachine() {
             string hotel_name;
             int client_id;
             int room_count;
-
             cin >> time >> hotel_name >> client_id >> room_count;
-
             manager.book(time, hotel_name, client_id, room_count);
-        } else if (query_type == "CLIENTS") {
-            string hotel_name;
-
-            cin >> hotel_name;
-
-            cout << manager.clients(hotel_name) << endl;
         } else if (query_type == "ROOMS") {
             string hotel_name;
-
             cin >> hotel_name;
-
             cout << manager.rooms(hotel_name) << endl;
         } else {
-            return 1;
+            string hotel_name;
+            cin >> hotel_name;
+            cout << manager.clients(hotel_name) << endl;
         }
     }
 
     return 0;
-}
-
-void checkNumericLimits() {
-    cout << "time: signed\n\t" << 1E18 << "\n\t";
-    cout << numeric_limits<int64_t>::max() << "\n";
-
-    cout << "client_id: unsigned\n\t" << 1E9 << "\n\t";
-    cout << numeric_limits<int>::max() << "\n";
 }
 
 void test() {
@@ -93,31 +117,4 @@ void test() {
 
     ASSERT_EQUAL(manager.rooms("FourSeasons"), 1);
     ASSERT_EQUAL(manager.rooms("Marriott"), 10);
-}
-
-int main(int argc, char **argv) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-//    {
-//        LOG_DURATION("LIMITS")
-//        checkNumericLimits();
-//    }
-
-    {
-        LOG_DURATION("TESTS")
-        TestRunner runner;
-        RUN_TEST(runner, test);
-    }
-
-//    {
-//        LOG_DURATION("BOOKING")
-//        int result = bookingMachine();
-//
-//        if (result == 1) {
-//            cerr << "ERROR\n";
-//        }
-//    }
-
-    return 0;
 }
