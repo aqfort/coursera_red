@@ -1,6 +1,6 @@
 #include <iostream>
 #include <map>
-#include <deque>
+#include <queue>
 
 #include "test_runner.h"
 #include "profile.h"
@@ -13,14 +13,28 @@ public:
 
     void book(const int64_t &time, const string &hotel_name, const int &client_id, const int &room_count) {
         Event event = Event(time, client_id, room_count);
+
+        if (current_time_ < time) {
+            current_time_ = time;
+        }
+
+        hotels_[hotel_name].book(event);
     }
 
     int clients(const string &hotel_name) {
-        return 0;
+        if (hotels_.count(hotel_name) == 0) {
+            return 0;
+        }
+
+        return hotels_[hotel_name].clients(current_time_);
     }
 
     int rooms(const string &hotel_name) {
-        return 0;
+        if (hotels_.count(hotel_name) == 0) {
+            return 0;
+        }
+
+        return hotels_[hotel_name].rooms(current_time_);
     }
 
 private:
@@ -37,23 +51,41 @@ private:
     public:
         Hotel() = default;
 
-        void book(const int64_t &time, const int &client_id, const int &room_count) {
-
+        void book(const Event &event) {
+            events_.emplace(event);
+            ++clients_[event.client_id_];
+            room_count_sum_ += event.room_count_;
         }
 
-        int clients() {
+        int clients(const int64_t &time) {
+            update(time);
+            return static_cast<int>(clients_.size());
+        }
 
+        int rooms(const int64_t &time) {
+            update(time);
+            return room_count_sum_;
         }
 
     private:
-        static int64_t current_time_;
-        static const int64_t day_ = 86400;
+        void update(const int64_t &time) {
+            while (events_.front().time_ <= time - day_ && !events_.empty()) {
+                room_count_sum_ -= events_.front().room_count_;
+                if (--clients_[events_.front().client_id_] == 0) {
+                    clients_.erase(events_.front().client_id_);
+                }
 
+                events_.pop();
+            }
+        }
+
+        static const int64_t day_ = 86400;
         int room_count_sum_ = 0;
         map<int, int> clients_{};
-        deque<Event> events_{};
+        queue<Event> events_{};
     };
 
+    int64_t current_time_ = numeric_limits<int64_t>::min();
     map<string, Hotel> hotels_{};
 };
 
@@ -63,11 +95,11 @@ int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    {
-        LOG_DURATION("TESTS")
-        TestRunner runner;
-        RUN_TEST(runner, test);
-    }
+//    {
+//        LOG_DURATION("TESTS")
+//        TestRunner runner;
+//        RUN_TEST(runner, test)
+//    }
 
     BookingManager manager;
 
@@ -102,19 +134,19 @@ int main() {
 void test() {
     BookingManager manager;
 
-    ASSERT_EQUAL(manager.clients("Marriott"), 0);
-    ASSERT_EQUAL(manager.rooms("Marriott"), 0);
+    ASSERT_EQUAL(manager.clients("Marriott"), 0)
+    ASSERT_EQUAL(manager.rooms("Marriott"), 0)
 
     manager.book(10, "FourSeasons", 1, 2);
     manager.book(10, "Marriott", 1, 1);
     manager.book(86409, "FourSeasons", 2, 1);
 
-    ASSERT_EQUAL(manager.clients("FourSeasons"), 2);
-    ASSERT_EQUAL(manager.rooms("FourSeasons"), 3);
-    ASSERT_EQUAL(manager.clients("Marriott"), 1);
+    ASSERT_EQUAL(manager.clients("FourSeasons"), 2)
+    ASSERT_EQUAL(manager.rooms("FourSeasons"), 3)
+    ASSERT_EQUAL(manager.clients("Marriott"), 1)
 
     manager.book(86410, "Marriott", 2, 10);
 
-    ASSERT_EQUAL(manager.rooms("FourSeasons"), 1);
-    ASSERT_EQUAL(manager.rooms("Marriott"), 10);
+    ASSERT_EQUAL(manager.rooms("FourSeasons"), 1)
+    ASSERT_EQUAL(manager.rooms("Marriott"), 10)
 }
