@@ -7,30 +7,37 @@
 
 using namespace std;
 
-class BookingManager {
+class BookingManager
+{
 public:
     BookingManager() = default;
 
-    void book(const int64_t &time, const string &hotel_name, const int &client_id, const int &room_count) {
+    void book(const int64_t &time, const string &hotel_name, const int &client_id, const int &room_count)
+    {
         Event event = Event(time, client_id, room_count);
 
-        if (current_time_ < time) {
+        if (current_time_ < time)
+        {
             current_time_ = time;
         }
 
         hotels_[hotel_name].book(event);
     }
 
-    int clients(const string &hotel_name) {
-        if (hotels_.count(hotel_name) == 0) {
+    int clients(const string &hotel_name)
+    {
+        if (hotels_.count(hotel_name) == 0)
+        {
             return 0;
         }
 
         return hotels_[hotel_name].clients(current_time_);
     }
 
-    int rooms(const string &hotel_name) {
-        if (hotels_.count(hotel_name) == 0) {
+    int rooms(const string &hotel_name)
+    {
+        if (hotels_.count(hotel_name) == 0)
+        {
             return 0;
         }
 
@@ -38,40 +45,47 @@ public:
     }
 
 private:
-    struct Event {
-        explicit Event(const int64_t &time, const int &client_id, const int &room_count) :
-                time_(time), client_id_(client_id), room_count_(room_count) {}
+    struct Event
+    {
+        explicit Event(const int64_t &time, const int &client_id, const int &room_count) : time_(time), client_id_(client_id), room_count_(room_count) {}
 
         const int64_t time_ = 0;
         const int client_id_ = 0;
         const int room_count_ = 0;
     };
 
-    class Hotel {
+    class Hotel
+    {
     public:
         Hotel() = default;
 
-        void book(const Event &event) {
+        void book(const Event &event)
+        {
             events_.emplace(event);
             ++clients_[event.client_id_];
             room_count_sum_ += event.room_count_;
         }
 
-        int clients(const int64_t &time) {
+        int clients(const int64_t &time)
+        {
             update(time);
             return static_cast<int>(clients_.size());
         }
 
-        int rooms(const int64_t &time) {
+        int rooms(const int64_t &time)
+        {
             update(time);
             return room_count_sum_;
         }
 
     private:
-        void update(const int64_t &time) {
-            while (events_.front().time_ <= time - day_ && !events_.empty()) {
+        void update(const int64_t &time)
+        {
+            while (events_.front().time_ <= time - day_ && !events_.empty())
+            {
                 room_count_sum_ -= events_.front().room_count_;
-                if (--clients_[events_.front().client_id_] == 0) {
+                if (--clients_[events_.front().client_id_] == 0)
+                {
                     clients_.erase(events_.front().client_id_);
                 }
 
@@ -91,37 +105,44 @@ private:
 
 void test();
 
-int main() {
+int main()
+{
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-//    {
-//        LOG_DURATION("TESTS")
-//        TestRunner runner;
-//        RUN_TEST(runner, test)
-//    }
+    //    {
+    //        LOG_DURATION("TESTS")
+    //        TestRunner runner;
+    //        RUN_TEST(runner, test)
+    //    }
 
     BookingManager manager;
 
     int query_count;
     cin >> query_count;
 
-    for (int query_id = 0; query_id < query_count; query_id++) {
+    for (int query_id = 0; query_id < query_count; query_id++)
+    {
         string query_type;
         cin >> query_type;
 
-        if (query_type == "BOOK") {
+        if (query_type == "BOOK")
+        {
             int64_t time;
             string hotel_name;
             int client_id;
             int room_count;
             cin >> time >> hotel_name >> client_id >> room_count;
             manager.book(time, hotel_name, client_id, room_count);
-        } else if (query_type == "ROOMS") {
+        }
+        else if (query_type == "ROOMS")
+        {
             string hotel_name;
             cin >> hotel_name;
             cout << manager.rooms(hotel_name) << endl;
-        } else {
+        }
+        else
+        {
             string hotel_name;
             cin >> hotel_name;
             cout << manager.clients(hotel_name) << endl;
@@ -131,7 +152,8 @@ int main() {
     return 0;
 }
 
-void test() {
+void test()
+{
     BookingManager manager;
 
     ASSERT_EQUAL(manager.clients("Marriott"), 0)

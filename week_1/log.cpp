@@ -1,12 +1,17 @@
-#include "test_runner.h"
+// #include "test_runner.h"
+
+#include "../test_runner_lib/test_runner.h"
+
 #include <sstream>
 #include <string>
 
 using namespace std;
 
-class Logger {
+class Logger
+{
 public:
-    explicit Logger(ostream &output_stream) : os(output_stream) {
+    explicit Logger(ostream &output_stream) : os(output_stream)
+    {
     }
 
     void SetLogLine(bool value) { log_line = value; }
@@ -27,33 +32,43 @@ private:
     string file;
 };
 
-void Logger::Log(const string &message) {
-    if (log_line && log_file) {
+void Logger::Log(const string &message)
+{
+    if (log_line && log_file)
+    {
         os << file << ":" << line << " ";
-    } else if (log_line) {
+    }
+    else if (log_line)
+    {
         os << "Line " << line << " ";
-    } else if (log_file) {
+    }
+    else if (log_file)
+    {
         os << file << " ";
     }
 
     os << message << "\n";
 }
 
-void Logger::SetLine(const int &new_line) {
+void Logger::SetLine(const int &new_line)
+{
     line = new_line;
 }
 
-void Logger::SetFile(const string &new_file) {
+void Logger::SetFile(const string &new_file)
+{
     file = new_file;
 }
 
-#define LOG(logger, message) {      \
-    (logger).SetLine(__LINE__);     \
-    (logger).SetFile(__FILE__);     \
-    (logger).Log(message);          \
-}
+#define LOG(logger, message)        \
+    {                               \
+        (logger).SetLine(__LINE__); \
+        (logger).SetFile(__FILE__); \
+        (logger).Log(message);      \
+    }
 
-void TestLog() {
+void TestLog()
+{
 /* Для написания юнит-тестов в этой задаче нам нужно фиксировать конкретные
  * номера строк в ожидаемом значении (см. переменную expected ниже). Если
  * мы добавляем какой-то код выше функции TestLog, то эти номера строк меняются,
@@ -86,7 +101,8 @@ void TestLog() {
     ASSERT_EQUAL(logs.str(), expected);
 }
 
-int main() {
+int main()
+{
     TestRunner tr;
     RUN_TEST(tr, TestLog);
 }

@@ -4,15 +4,18 @@
 
 using namespace std;
 
-struct Date {
+struct Date
+{
     int year, month, day;
 };
 
-struct Time {
+struct Time
+{
     int hours, minutes;
 };
 
-struct AirlineTicket {
+struct AirlineTicket
+{
     string from;
     string to;
     string airline;

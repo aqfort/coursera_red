@@ -1,49 +1,60 @@
 #include "airline_ticket.h"
-#include "test_runner.h"
+// #include "test_runner.h"
+
+#include "../test_runner_lib/test_runner.h"
 
 #include <iomanip>
 #include <map>
 
 using namespace std;
 
-bool operator<(const Date &lhs, const Date &rhs) {
+bool operator<(const Date &lhs, const Date &rhs)
+{
     return make_tuple(lhs.year, lhs.month, lhs.day) < make_tuple(rhs.year, rhs.month, rhs.day);
 }
 
-bool operator<(const Time &lhs, const Time &rhs) {
+bool operator<(const Time &lhs, const Time &rhs)
+{
     return make_tuple(lhs.hours, lhs.minutes) < make_tuple(rhs.hours, rhs.minutes);
 }
 
-ostream &operator<<(ostream &stream, const Date &date) {
+ostream &operator<<(ostream &stream, const Date &date)
+{
     stream << setfill('0') << setw(4) << date.year << '-'
            << setfill('0') << setw(2) << date.month << '-'
            << setfill('0') << setw(2) << date.day;
     return stream;
 }
 
-ostream &operator<<(ostream &stream, const Time &time) {
+ostream &operator<<(ostream &stream, const Time &time)
+{
     stream << setfill('0') << setw(2) << time.hours << ':'
            << setfill('0') << setw(2) << time.minutes;
     return stream;
 }
 
-bool operator!=(const Date &lhs, const Date &rhs) {
+bool operator!=(const Date &lhs, const Date &rhs)
+{
     return make_tuple(lhs.year, lhs.month, lhs.day) != make_tuple(rhs.year, rhs.month, rhs.day);
 }
 
-bool operator!=(const Time &lhs, const Time &rhs) {
+bool operator!=(const Time &lhs, const Time &rhs)
+{
     return make_tuple(lhs.hours, lhs.minutes) != make_tuple(rhs.hours, rhs.minutes);
 }
 
-bool operator==(const Date &lhs, const Date &rhs) {
+bool operator==(const Date &lhs, const Date &rhs)
+{
     return make_tuple(lhs.year, lhs.month, lhs.day) == make_tuple(rhs.year, rhs.month, rhs.day);
 }
 
-bool operator==(const Time &lhs, const Time &rhs) {
+bool operator==(const Time &lhs, const Time &rhs)
+{
     return make_tuple(lhs.hours, lhs.minutes) == make_tuple(rhs.hours, rhs.minutes);
 }
 
-Date ParseDateFromString(const string &string_input) {
+Date ParseDateFromString(const string &string_input)
+{
     istringstream string_stream(string_input);
     bool flag = true;
 
@@ -62,7 +73,8 @@ Date ParseDateFromString(const string &string_input) {
     flag = flag && (string_stream >> new_day);
     flag = flag && (string_stream.eof());
 
-    if (!flag) {
+    if (!flag)
+    {
         throw runtime_error("Wrong date format: " + string_input);
     }
 
@@ -74,7 +86,8 @@ Date ParseDateFromString(const string &string_input) {
     return result;
 }
 
-Time ParseTimeFromString(const string &string_input) {
+Time ParseTimeFromString(const string &string_input)
+{
     istringstream string_stream(string_input);
     bool flag = true;
 
@@ -88,7 +101,8 @@ Time ParseTimeFromString(const string &string_input) {
     flag = flag && (string_stream >> new_minutes);
     flag = flag && (string_stream.eof());
 
-    if (!flag) {
+    if (!flag)
+    {
         throw runtime_error("Wrong time format: " + string_input);
     }
 
@@ -99,35 +113,40 @@ Time ParseTimeFromString(const string &string_input) {
     return result;
 }
 
-istream &operator>>(istream &stream, Date &date) {
+istream &operator>>(istream &stream, Date &date)
+{
     string string_input;
     stream >> string_input;
     date = ParseDateFromString(string_input);
     return stream;
 }
 
-istream &operator>>(istream &stream, Time &time) {
+istream &operator>>(istream &stream, Time &time)
+{
     string string_input;
     stream >> string_input;
     time = ParseTimeFromString(string_input);
     return stream;
 }
 
-#define UPDATE_FIELD(ticket, field, values) {   \
-    auto it = (values).find(#field);            \
-    if (it != (values).end()) {                 \
-        stringstream stream(it->second);        \
-        stream >> (ticket).field;               \
-    }                                           \
-}
+#define UPDATE_FIELD(ticket, field, values)  \
+    {                                        \
+        auto it = (values).find(#field);     \
+        if (it != (values).end())            \
+        {                                    \
+            stringstream stream(it->second); \
+            stream >> (ticket).field;        \
+        }                                    \
+    }
 
-void TestUpdate() {
+void TestUpdate()
+{
     AirlineTicket t;
     t.price = 0;
 
     const map<string, string> updates1 = {
-            {"departure_date", "2018-2-28"},
-            {"departure_time", "17:40"},
+        {"departure_date", "2018-2-28"},
+        {"departure_time", "17:40"},
     };
     UPDATE_FIELD(t, departure_date, updates1);
     UPDATE_FIELD(t, departure_time, updates1);
@@ -138,8 +157,8 @@ void TestUpdate() {
     ASSERT_EQUAL(t.price, 0);
 
     const map<string, string> updates2 = {
-            {"price",        "12550"},
-            {"arrival_time", "20:33"},
+        {"price", "12550"},
+        {"arrival_time", "20:33"},
     };
     UPDATE_FIELD(t, departure_date, updates2);
     UPDATE_FIELD(t, departure_time, updates2);
@@ -154,7 +173,8 @@ void TestUpdate() {
     ASSERT_EQUAL(t.arrival_time, (Time{20, 33}));
 }
 
-int main() {
+int main()
+{
     TestRunner tr;
     RUN_TEST(tr, TestUpdate);
 }

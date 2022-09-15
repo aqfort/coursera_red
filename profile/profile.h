@@ -7,13 +7,16 @@
 using namespace std;
 using namespace std::chrono;
 
-class LogDuration {
+class LogDuration
+{
 public:
     explicit LogDuration(const string &msg = "")
-            : message(msg + ": "), start(steady_clock::now()) {
+        : message(msg + ": "), start(steady_clock::now())
+    {
     }
 
-    ~LogDuration() {
+    ~LogDuration()
+    {
         auto finish = steady_clock::now();
         auto dur = finish - start;
         cerr << message
@@ -26,8 +29,8 @@ private:
     steady_clock::time_point start;
 };
 
-#define UNIQ_ID_IMPL(line_no) _a_local_var_ ## line_no
+#define UNIQ_ID_IMPL(line_no) _a_local_var_##line_no
 #define UNIQ_ID(line_no) UNIQ_ID_IMPL(line_no)
 
-#define LOG_DURATION(message)                   \
-    LogDuration UNIQ_ID(__LINE__) {message};
+#define LOG_DURATION(message) \
+    LogDuration UNIQ_ID(__LINE__){message};

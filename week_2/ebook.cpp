@@ -8,32 +8,38 @@
 
 using namespace std;
 
-class ReadingManager {
+class ReadingManager
+{
 public:
     ReadingManager()
-    // -1 значит, что не случилось ни одного READ
-            : user_page_counts_(MAX_USER_COUNT_ + 1, -1),
-              page_achieved_by_count_(MAX_PAGE_COUNT_ + 1, 0) {}
+        // -1 значит, что не случилось ни одного READ
+        : user_page_counts_(MAX_USER_COUNT_ + 1, -1),
+          page_achieved_by_count_(MAX_PAGE_COUNT_ + 1, 0)
+    {
+    }
 
-    void Read(int user_id, int page_count) {
+    void Read(int user_id, int page_count)
+    {
         UpdatePageRange(user_page_counts_[user_id] + 1, page_count + 1);
         user_page_counts_[user_id] = page_count;
     }
 
-    [[nodiscard]] double Cheer(int user_id) const {
+    [[nodiscard]] double Cheer(int user_id) const
+    {
         const int pages_count = user_page_counts_[user_id];
-        if (pages_count == -1) {
+        if (pages_count == -1)
+        {
             return 0;
         }
         const int user_count = GetUserCount();
-        if (user_count == 1) {
+        if (user_count == 1)
+        {
             return 1;
         }
         // По умолчанию деление целочисленное, поэтому
         // нужно привести числитель к типу double.
         // Простой способ сделать это — умножить его на 1.0.
-        return (user_count - page_achieved_by_count_[pages_count]) * 1.0
-               / (user_count - 1);
+        return (user_count - page_achieved_by_count_[pages_count]) * 1.0 / (user_count - 1);
     }
 
 private:
@@ -49,27 +55,33 @@ private:
     // Количество пользователей, дочитавших (как минимум) до страницы <индекс>
     vector<int> page_achieved_by_count_;
 
-    [[nodiscard]] int GetUserCount() const {
+    [[nodiscard]] int GetUserCount() const
+    {
         return page_achieved_by_count_[0];
     }
 
     // lhs включительно, rhs не включительно
-    void UpdatePageRange(int lhs, int rhs) {
-        for (int i = lhs; i < rhs; ++i) {
+    void UpdatePageRange(int lhs, int rhs)
+    {
+        for (int i = lhs; i < rhs; ++i)
+        {
             ++page_achieved_by_count_[i];
         }
     }
 };
 
-class ReadingManagerStillSlow {
+class ReadingManagerStillSlow
+{
 private:
-    struct Person {
+    struct Person
+    {
         int _id;
         int _page;
 
         explicit Person(const int &id, const int &page) : _id(id), _page(page) {}
 
-        bool operator<(const Person &rhs) const {
+        bool operator<(const Person &rhs) const
+        {
             return tie(_page, _id) < tie(rhs._page, rhs._id);
         }
     };
@@ -78,8 +90,10 @@ private:
     map<int, int> _id_page;
 
 public:
-    void Read(const int &id, const int &page) {
-        if (_id_page.count(id) > 0) {
+    void Read(const int &id, const int &page)
+    {
+        if (_id_page.count(id) > 0)
+        {
             _rating.erase(Person(id, _id_page[id]));
         }
 
@@ -87,12 +101,15 @@ public:
         _id_page[id] = page;
     }
 
-    double Cheer(const int &id) {
-        if (_id_page.count(id) == 0) {
+    double Cheer(const int &id)
+    {
+        if (_id_page.count(id) == 0)
+        {
             return 0.0;
         }
 
-        if (_id_page.size() == 1) {
+        if (_id_page.size() == 1)
+        {
             return 1.0;
         }
 
@@ -102,39 +119,48 @@ public:
     }
 };
 
-class ReadingManagerSlow {
+class ReadingManagerSlow
+{
 public:
     ReadingManagerSlow()
-            : user_page_counts_(MAX_USER_COUNT_ + 1, 0),
-              sorted_users_(),
-              user_positions_(MAX_USER_COUNT_ + 1, -1) {}
+        : user_page_counts_(MAX_USER_COUNT_ + 1, 0),
+          sorted_users_(),
+          user_positions_(MAX_USER_COUNT_ + 1, -1) {}
 
-    void Read(int user_id, int page_count) {
-        if (user_page_counts_[user_id] == 0) {
+    void Read(int user_id, int page_count)
+    {
+        if (user_page_counts_[user_id] == 0)
+        {
             AddUser(user_id);
         }
         user_page_counts_[user_id] = page_count;
         int &position = user_positions_[user_id];
-        while (position > 0 && page_count > user_page_counts_[sorted_users_[position - 1]]) {
+        while (position > 0 && page_count > user_page_counts_[sorted_users_[position - 1]])
+        {
             SwapUsers(position, position - 1);
         }
     }
 
-    double Cheer(int user_id) const {
-        if (user_page_counts_[user_id] == 0) {
+    double Cheer(int user_id) const
+    {
+        if (user_page_counts_[user_id] == 0)
+        {
             return 0;
         }
         const int user_count = GetUserCount();
-        if (user_count == 1) {
+        if (user_count == 1)
+        {
             return 1;
         }
         const int page_count = user_page_counts_[user_id];
         int position = user_positions_[user_id];
         while (position < user_count &&
-               user_page_counts_[sorted_users_[position]] == page_count) {
+               user_page_counts_[sorted_users_[position]] == page_count)
+        {
             ++position;
         }
-        if (position == user_count) {
+        if (position == user_count)
+        {
             return 0;
         }
         // По умолчанию деление целочисленное, поэтому
@@ -155,16 +181,19 @@ private:
     vector<int> sorted_users_;   // отсортированы по убыванию количества страниц
     vector<int> user_positions_; // позиции в векторе sorted_users_
 
-    int GetUserCount() const {
+    int GetUserCount() const
+    {
         return sorted_users_.size();
     }
 
-    void AddUser(int user_id) {
+    void AddUser(int user_id)
+    {
         sorted_users_.push_back(user_id);
         user_positions_[user_id] = sorted_users_.size() - 1;
     }
 
-    void SwapUsers(int lhs_position, int rhs_position) {
+    void SwapUsers(int lhs_position, int rhs_position)
+    {
         const int lhs_id = sorted_users_[lhs_position];
         const int rhs_id = sorted_users_[rhs_position];
         swap(sorted_users_[lhs_position], sorted_users_[rhs_position]);
@@ -172,7 +201,8 @@ private:
     }
 };
 
-int main() {
+int main()
+{
     // Для ускорения чтения данных отключается синхронизация
     // cin и cout с stdio,
     // а также выполняется отвязка cin от cout
@@ -184,17 +214,21 @@ int main() {
     int query_count;
     cin >> query_count;
 
-    for (int query_id = 0; query_id < query_count; ++query_id) {
+    for (int query_id = 0; query_id < query_count; ++query_id)
+    {
         string query_type;
         cin >> query_type;
         int user_id;
         cin >> user_id;
 
-        if (query_type == "READ") {
+        if (query_type == "READ")
+        {
             int page_count;
             cin >> page_count;
             manager.Read(user_id, page_count);
-        } else if (query_type == "CHEER") {
+        }
+        else if (query_type == "CHEER")
+        {
             cout << setprecision(6) << manager.Cheer(user_id) << "\n";
         }
     }

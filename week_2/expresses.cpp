@@ -6,17 +6,21 @@
 
 using namespace std;
 
-class RouteManager {
+class RouteManager
+{
 public:
-    void AddRoute(const int &start, const int &finish) {
+    void AddRoute(const int &start, const int &finish)
+    {
         this->reachable_lists_[start].emplace(finish);
         this->reachable_lists_[finish].emplace(start);
     }
 
-    [[nodiscard]] int FindNearestFinish(const int &start, const int &finish) const {
+    [[nodiscard]] int FindNearestFinish(const int &start, const int &finish) const
+    {
         int result = abs(finish - start);
 
-        if (this->reachable_lists_.count(start) < 1) {
+        if (this->reachable_lists_.count(start) < 1)
+        {
             return result;
         }
 
@@ -24,11 +28,13 @@ public:
 
         const auto finish_pos = reachable_stations.lower_bound(finish);
 
-        if (finish_pos != end(reachable_stations)) {
+        if (finish_pos != end(reachable_stations))
+        {
             result = min(result, abs(finish - *finish_pos));
         }
 
-        if (finish_pos != begin(reachable_stations)) {
+        if (finish_pos != begin(reachable_stations))
+        {
             result = min(result, abs(finish - *prev(finish_pos)));
         }
 
@@ -39,21 +45,25 @@ private:
     map<int, set<int>> reachable_lists_;
 };
 
-
-int main() {
+int main()
+{
     RouteManager routes;
 
     int query_count;
     cin >> query_count;
 
-    for (int query_id = 0; query_id < query_count; ++query_id) {
+    for (int query_id = 0; query_id < query_count; ++query_id)
+    {
         string query_type;
         cin >> query_type;
         int start, finish;
         cin >> start >> finish;
-        if (query_type == "ADD") {
+        if (query_type == "ADD")
+        {
             routes.AddRoute(start, finish);
-        } else if (query_type == "GO") {
+        }
+        else if (query_type == "GO")
+        {
             cout << routes.FindNearestFinish(start, finish) << "\n";
         }
     }
