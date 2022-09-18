@@ -35,7 +35,10 @@ add_subdirectory(test_runner_lib)
 # set(SOURCE week_2/ebook.cpp)
 # set(SOURCE week_2/booking.cpp)
 
-set(SOURCE week_3/object_pool.cpp)
+# set(SOURCE week_3/object_pool.cpp)
+# set(SOURCE week_3/swap_sort_copy.cpp)
+# set(SOURCE week_3/simple_vector.cpp)
+set(SOURCE week_3/linked_list.cpp)
 
 
 
