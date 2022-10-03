@@ -46,7 +46,12 @@ add_subdirectory(test_runner_lib)
 # set(SOURCE week_4/translator.cpp)
 # set(SOURCE week_4/airport_counter.cpp)
 # set(SOURCE week_4/text_editor.cpp)
-set(SOURCE week_4/server_stats.cpp)
+
+file(GLOB SOURCE
+    week_4/server_stats.cpp
+    week_4/http_request.h
+    week_4/stats.h
+    week_4/stats.cpp)
 
 
 
