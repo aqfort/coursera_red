@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
-
 project(coursera_red)
-
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_FLAGS -pthread)
 
 
 
@@ -10,10 +9,7 @@ set(CMAKE_CXX_STANDARD 23)
 
 include_directories(profile)
 
-
-
 include_directories(test_runner_lib)
-
 add_subdirectory(test_runner_lib)
 
 
@@ -47,11 +43,31 @@ add_subdirectory(test_runner_lib)
 # set(SOURCE week_4/airport_counter.cpp)
 # set(SOURCE week_4/text_editor.cpp)
 
-file(GLOB SOURCE
-    week_4/server_stats.cpp
-    week_4/http_request.h
-    week_4/stats.h
-    week_4/stats.cpp)
+# file(GLOB SOURCE
+#     week_4/server_stats.cpp
+#     week_4/http_request.h
+#     week_4/stats.h
+#     week_4/stats.cpp)
+
+# set(SOURCE week_5/josephus_permutation.cpp)
+# set(SOURCE week_5/group_heavy_strings.cpp)
+# set(SOURCE week_5/simple_vector_copy_assignment.cpp)
+# set(SOURCE week_5/split_into_sentences.cpp)
+# set(SOURCE week_5/simple_vector_2.cpp)
+# set(SOURCE week_5/merge_sort_3.cpp)
+# set(SOURCE week_5/priority_collection_2.cpp)
+
+# set(THREADS_PREFER_PTHREAD_FLAG ON)
+# find_package(Threads REQUIRED)
+
+# set(SOURCE week_5/async.cpp)
+# set(SOURCE week_5/matrix_sum.cpp)
+# set(SOURCE week_5/explore_key_words.cpp)
+# set(SOURCE week_5/explore_key_words.cpp)
+# set(SOURCE week_5/synchronized.cpp)
+set(SOURCE week_5/concurrent_map.cpp)
+
+# set(SOURCE week_5/boost_check.cpp)
 
 
 
@@ -59,6 +75,15 @@ file(GLOB SOURCE
 
 add_executable(${PROJECT_NAME} ${SOURCE})
 
-
-
 target_link_libraries(${PROJECT_NAME} test_runner_lib)
+# target_link_libraries(${PROJECT_NAME} test_runner_lib Threads::Threads)
+
+
+
+
+
+# # # # # # for c compiler
+# set(GCC_COVERAGE_COMPILE_FLAGS "-pthread")
+# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
+# # # # # # for c++
+# SET(CMAKE_CXX_FLAGS -pthread)
