@@ -128,16 +128,16 @@ void TestRunner::RunTest(TestFunction test, const string &test_name)
     try
     {
         test();
-        cerr << test_name << " - OK" << endl;
+        cerr << test_name << " - OK" << endl << endl;
     }
     catch (exception &e)
     {
         ++fail_count;
-        cerr << test_name << " - FAIL -> " << e.what() << endl;
+        cerr << test_name << " - FAIL -> " << e.what() << endl << endl;
     }
     catch (...)
     {
         ++fail_count;
-        cerr << "Unknown exception caught" << endl;
+        cerr << "Unknown exception caught" << endl << endl;
     }
 }
