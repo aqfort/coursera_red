@@ -38,8 +38,8 @@ Stats ExploreLine(const set<string> &key_words, const string &line)
 
     istringstream iss(line);
 
-    copy(istream_iterator<string>(iss),
-         istream_iterator<string>(),
+    move((istream_iterator<string>(iss)),
+         (istream_iterator<string>()),
          back_inserter(words));
 
     for (const string &word : words)
