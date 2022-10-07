@@ -19,9 +19,22 @@ public:
     {
         auto finish = steady_clock::now();
         auto dur = finish - start;
-        cerr << message
-             << duration_cast<milliseconds>(dur).count()
-             << " ms" << endl;
+
+        auto s = duration_cast<seconds>(dur);
+        dur -= s;
+        auto ms = duration_cast<milliseconds>(dur);
+        dur -= ms;
+        auto us = duration_cast<microseconds>(dur);
+        dur -= us;
+        auto ns = duration_cast<nanoseconds>(dur);
+        dur -= ns;
+
+        cerr << message << "\n\t"
+             << s.count() << " s "
+             << ms.count() << " ms "
+             << us.count() << " us "
+             << ns.count() << " ns "
+             << endl;
     }
 
 private:
