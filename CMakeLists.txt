@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.24)
 project(coursera_red)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_FLAGS -pthread)
@@ -7,9 +7,7 @@ set(CMAKE_CXX_FLAGS -pthread)
 
 
 
-include_directories(profile)
-
-include_directories(test_runner_lib)
+include_directories(test_runner_lib profile)
 add_subdirectory(test_runner_lib)
 
 
@@ -57,17 +55,17 @@ add_subdirectory(test_runner_lib)
 # set(SOURCE week_5/merge_sort_3.cpp)
 # set(SOURCE week_5/priority_collection_2.cpp)
 
-# set(THREADS_PREFER_PTHREAD_FLAG ON)
-# find_package(Threads REQUIRED)
-
 # set(SOURCE week_5/async.cpp)
 # set(SOURCE week_5/matrix_sum.cpp)
 # set(SOURCE week_5/explore_key_words.cpp)
-# set(SOURCE week_5/explore_key_words.cpp)
 # set(SOURCE week_5/synchronized.cpp)
-set(SOURCE week_5/concurrent_map.cpp)
+# set(SOURCE week_5/concurrent_map.cpp)
 
 # set(SOURCE week_5/boost_check.cpp)
+
+# file(GLOB SOURCE project/*)
+
+file(GLOB SOURCE project_multi/*)
 
 
 
@@ -76,7 +74,6 @@ set(SOURCE week_5/concurrent_map.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE})
 
 target_link_libraries(${PROJECT_NAME} test_runner_lib)
-# target_link_libraries(${PROJECT_NAME} test_runner_lib Threads::Threads)
 
 
 
